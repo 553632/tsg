@@ -1,0 +1,79 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MainPage.master.cs" Inherits="qjbopac.MainPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title runat="server">图书馆公共查询系统</title>
+    <link href="CSS/layout.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/global.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" type="text/javascript" src="Jscript/config.js"></script>
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id="header">
+   	  <div id="systemInfo">
+       	  <div id="logo"><img id="TrademarkPic" src="Images/logo.gif" alt="LOGO" title="LOGO" runat="server" style="width: 72px;height:72px;" /></div>
+            <div id="systemName" class="systemName" runat="server">图书馆公共查询系统</div>
+      </div>
+        <div id="login" class="login" runat="server">
+        <div id="logined">
+          <div id="loginInput"> <span>读者编号：</span><input name="input" id="uname" type="text" />
+              <span>密码：</span><input name="input" id="upwd" onkeyup="if(event.keyCode==13) login();" type="password" />
+          </div>
+          <div id="loginBtn" onclick="login()"></div>
+          </div>
+        </div>
+    </div>
+    <div id="menu">
+    	<ul>
+        	<li><a href="Introduction.aspx">本馆概况</a></li>
+            <li><a href="ReaderGuide.aspx">读者指南</a></li>
+            <li><a href="NoticeList.aspx">公告信息</a></li>
+			<%--<li><a href="Explorer.aspx">分类浏览</a></li>--%>
+            <li><a href="Default.aspx">书目查询</a></li>            
+            <li style="border:none;"><a href="MyLib.aspx">我的图书馆</a></li>
+        </ul>
+    </div>    
+    <div id="content">
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    <div id="copyright">
+       	<div id="copyrightContent"><a id="copyrightlink" href="" target="_blank" runat="server">XXXXX, Inc.</a> 版权所有</div>
+    </div>    
+    </form>
+    
+    <script language="javascript" type="text/javascript">
+    function login()
+    {
+        var uname = $("uname").value;
+        var pwd = $("upwd").value;
+        if(uname=="" || pwd=="")
+        {
+            alert('读者编号和密码不能为空！');
+            $("uname").focus();
+            return;
+        }
+        var res = qjbopac.MainPage.readerLogin(uname,pwd);
+        if(res.error) return showAjaxProError(res.error);
+        if(res.value == true)
+        {
+            $("logined").innerHTML = "<div>读者【"+uname+"】欢迎您的光临！<a href='Logout.aspx'>退出</a></div>";
+            window.location.reload();
+        }
+        else
+        {
+            alert('登录失败，读者编号或密码错误！');
+            $("uname").select();
+            $("uname").focus();
+        }
+    }
+    </script>
+    
+</body>
+</html>
